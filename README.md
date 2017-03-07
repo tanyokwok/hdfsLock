@@ -1,13 +1,25 @@
+简介
+=====
+ DistLock是基于HDFS实现的分布式锁机制。
+ 该锁的目的是方便HDFS文件锁操作，但是适用于对锁效率要求不高的场景。
+ + 主要优势是：分布式锁创建机制，配置简单
+
+
+使用要求
+----------
++ 需要安装HDFS
++ 需要安装pydoop
+
 设计思想
 ---------
 参考zookeeper，redis等分布式锁的设计，在pydoop hdfs api上实现：
-1. 在hdfs上面创建一个lock目录(/path/to/lock)
-2. 各个节点(拥有唯一ID)在申请锁的时候需要执行如下步骤
-    1. 创建路径为/path/to/lock/namd-ID.lock的文件
-    2. 获取/path/to/lock/目录下的所有文件信息
-    3. /path/to/lock/下的文件按照创建时间排序
-    4. 如果最先创建的文件的ID，正好为当前节点ID的话，则获得锁。否则，获得锁失败
-3. 释放锁操作，删除/path/to/lock目录下的所有文件
++ 在hdfs上面创建一个lock目录(/path/to/lock)
++ 各个节点(拥有唯一ID)在申请锁的时候需要执行如下步骤
+    + 创建路径为/path/to/lock/namd-ID.lock的文件
+    + 获取/path/to/lock/目录下的所有文件信息
+    + /path/to/lock/下的文件按照创建时间排序
+    + 如果最先创建的文件的ID，正好为当前节点ID的话，则获得锁。否则，获得锁失败
++ 释放锁操作，删除/path/to/lock目录下的所有文件
 
 
 合理性
